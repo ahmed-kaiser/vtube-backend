@@ -1,5 +1,5 @@
 /.vscode
-/node_module
+/node_modules
 ./dist
 
 *.env
