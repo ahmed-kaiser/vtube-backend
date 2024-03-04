@@ -13,7 +13,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // step 6 - create user object and create entry in bd
   // step 7 - remove password and refresh token field from response
   // step 8 - check for user creation
-  // step 9 -return response
+  // step 9 - return response
 
   const { username, email, fullName, password } = req.body;
 
@@ -40,7 +40,17 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
+
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
   }
@@ -53,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    username: username.toLowercase(),
+    username: username.toLowerCase(),
     email,
     fullName,
     avatar: avatar.url,
@@ -68,7 +78,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new ApiError(
       500,
-      "Some thing went wrong when trying to register the user"
+      "Something went wrong when trying to register the user"
     );
   }
 
